@@ -25,7 +25,7 @@ namespace DataModel
             //     }
             // }
         }
-        
+
         private static void Shuffle<T>(IList<T> list)
         {
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
@@ -61,7 +61,8 @@ namespace DataModel
                 if (AddRandom(grid, cell.x, cell.y))
                 {
                     var newGrid = grid.Clone() as int[,];
-                    if (!GFG.solveSudoku(newGrid, _size))
+                    _solveCounter = 0;
+                    if (!SolveSudoku(newGrid, _size))
                     {
                         grid[cell.x, cell.y] = 0;
                     }
@@ -73,7 +74,7 @@ namespace DataModel
 
                 count++;
             }
-            
+
 
             var allCells = new List<(int x,int y)>();
             for (var x = 0; x < _size; x++)
@@ -83,9 +84,9 @@ namespace DataModel
                     allCells.Add((x, y));
                 }
             }
-            
+
             Shuffle(allCells);
-            
+
             foreach (var cell in allCells)
             {
                 var save = grid[cell.x, cell.y];
@@ -97,6 +98,71 @@ namespace DataModel
             }
 
             return grid;
+        }
+
+
+        private int _solveCounter = 0;
+        public bool SolveSudoku(int[, ] board,
+            int n)
+        {
+
+            if(_solveCounter >10_000)
+            {
+                return false;
+            }
+
+            _solveCounter++;
+            int row = -1;
+            int col = -1;
+            bool isEmpty = true;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (board[i, j] == 0)
+                    {
+                        row = i;
+                        col = j;
+
+                        // We still have some remaining
+                        // missing values in Sudoku
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                if (!isEmpty)
+                {
+                    break;
+                }
+            }
+
+            // no empty space left
+            if (isEmpty)
+            {
+                return true;
+            }
+
+            // else for each-row backtrack
+            for (int num = 1; num <= n; num++)
+            {
+                if (GFG.isSafe(board, row, col, num))
+                {
+                    board[row, col] = num;
+                    if (SolveSudoku(board, n))
+                    {
+
+                        // Print(board, n);
+                        return true;
+                    }
+                    else
+                    {
+
+                        // Replace it
+                        board[row, col] = 0;
+                    }
+                }
+            }
+            return false;
         }
 
         private bool AddRandom(int[,] grid, int x, int y)
