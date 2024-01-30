@@ -63,6 +63,7 @@ public class BoardManager : MonoBehaviour
                     tile.transform.localScale = new Vector3(1, 1, 1);
                     var rectTransform = tile.GetComponent<RectTransform>();
                     rectTransform.sizeDelta = new Vector2(tileSize, tileSize);
+                    // var background = background.GetComponent<UnityEngine.UI.Image>();
 
                     rectTransform.anchoredPosition = new Vector2(xOffset,-yOffset);
 
