@@ -12,9 +12,9 @@ namespace DataModel
 
         public int[,] Grid => _grid;
 
-        public Board()
+        public Board(GameManager.E_Difficulty difficulty)
         {
-            _grid = GenerateGrid();
+            _grid = GenerateGrid(difficulty);
 
             // _grid = new int[_size, _size];
             // for (var x = 0; x < _size; x++)
@@ -41,7 +41,7 @@ namespace DataModel
             }
         }
 
-        private int[,] GenerateGrid()
+        private int[,] GenerateGrid(GameManager.E_Difficulty difficulty)
         {
             var grid = new int[_size, _size];
 
@@ -87,6 +87,8 @@ namespace DataModel
 
             Shuffle(allCells);
 
+            var removed = new List<(int x,int y, int val)>();
+
             foreach (var cell in allCells)
             {
                 var save = grid[cell.x, cell.y];
@@ -95,6 +97,32 @@ namespace DataModel
                 {
                     grid[cell.x, cell.y] = save;
                 }
+                else
+                {
+                    removed.Add((cell.x, cell.y,save));
+                }
+            }
+
+            //Difficulty
+            Shuffle(removed);
+
+            var addBackCount = 0;
+            switch (difficulty)
+            {
+                case GameManager.E_Difficulty.Easy:
+                    addBackCount = removed.Count / 2;
+                    break;
+                case GameManager.E_Difficulty.Medium:
+                    addBackCount = removed.Count / 4;
+                    break;
+                case GameManager.E_Difficulty.Hard:
+                    addBackCount = 0;
+                    break;
+            }
+
+            for (var i = 0; i < addBackCount; i++)
+            {
+                grid[removed[i].x, removed[i].y] = removed[i].val;
             }
 
             return grid;

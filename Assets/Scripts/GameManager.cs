@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         {
             if(_boards[difficulty].Count < _queueSize)
             {
-                var board = new Board();
+                var board = new Board(difficulty);
                 _boards[difficulty].Enqueue(board);
             }
         }

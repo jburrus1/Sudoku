@@ -63,13 +63,17 @@ public class BoardManager : MonoBehaviour
                     tile.transform.localScale = new Vector3(1, 1, 1);
                     var rectTransform = tile.GetComponent<RectTransform>();
                     rectTransform.sizeDelta = new Vector2(tileSize, tileSize);
-                    // var background = background.GetComponent<UnityEngine.UI.Image>();
+                    var background = tile.GetComponent<UnityEngine.UI.Image>();
+                    if (_board.Grid[x, y] != 0)
+                    {
+                        background.color = new Color(0.9f, 0.9f, 0.9f);
+                    }
 
                     rectTransform.anchoredPosition = new Vector2(xOffset,-yOffset);
 
                     var num = tile.transform.Find("Num");
                     var numField = num.GetComponent<UnityEngine.UI.Image>();
-                    numField.sprite = _board.Grid[x, y] == 0 ? null : GetNum(_board.Grid[x, y]);
+                    numField.sprite = _board.Grid[x, y] == 0 ? null : GetNum(_board.Grid[x, y]-1);
 
                     var buttonComponent = tile.GetComponent<Button>();
                     if (_board.Grid[x, y] != 0)
@@ -194,9 +198,11 @@ public class BoardManager : MonoBehaviour
     public bool Check()
     {
         var xHashes = new List<HashSet<int>>();
+        var boxHashes = new List<HashSet<int>>();
         foreach(var x in Enumerable.Range(0,9))
         {
             xHashes.Add(new HashSet<int>());
+            boxHashes.Add(new HashSet<int>());
         }
 
         for(var x=0; x<9; x++)
@@ -206,13 +212,19 @@ public class BoardManager : MonoBehaviour
             {
                 var val = _board.Grid[x, y];
 
-                if ((val == 0) || yHash.Contains(val) || xHashes[y].Contains(val))
+                var xGroup = x / 3;
+                var yGroup = y / 3;
+
+                var boxIndex = xGroup * 3 + yGroup;
+
+                if ((val == 0) || yHash.Contains(val) || xHashes[y].Contains(val) || boxHashes[boxIndex].Contains(val))
                 {
                     return false;
                 }
 
                 xHashes[y].Add(val);
                 yHash.Add(val);
+                boxHashes[boxIndex].Add(val);
             }
         }
 
