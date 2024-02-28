@@ -33,5 +33,10 @@ public class CheckBoard : MonoBehaviour
         };
 
         _image.color = check ? Color.green : Color.red;
+
+        if (check)
+        {
+            _boardManager.AnimateVictory();
+        }
     }
 }

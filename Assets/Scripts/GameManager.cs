@@ -10,24 +10,24 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private int _queueSize = 5;
-    private Dictionary<E_Difficulty, Queue<Board>> _boards;
+    private Dictionary<E_Difficulty, Queue<DataModel.Board>> _boards;
     private Dictionary<E_Difficulty, object> _locks;
     private Task[] _tasks;
     public static GameManager Instance;
 
     public E_Difficulty CurrentDifficulty;
-    public Dictionary<E_Difficulty, Queue<Board>> Boards => _boards;
+    public Dictionary<E_Difficulty, Queue<DataModel.Board>> Boards => _boards;
 
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
         DontDestroyOnLoad(this);
-        _boards = new Dictionary<E_Difficulty, Queue<Board>>();
+        _boards = new Dictionary<E_Difficulty, Queue<DataModel.Board>>();
         _locks = new Dictionary<E_Difficulty, object>();
         foreach(var difficulty in Enum.GetValues(typeof(E_Difficulty)))
         {
-            _boards.Add((E_Difficulty)difficulty, new Queue<Board>());
+            _boards.Add((E_Difficulty)difficulty, new Queue<DataModel.Board>());
             _locks.Add((E_Difficulty)difficulty, new object());
         }
 
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         {
             if(_boards[difficulty].Count < _queueSize)
             {
-                var board = new Board(difficulty);
+                var board = new DataModel.Board(difficulty);
                 _boards[difficulty].Enqueue(board);
             }
         }

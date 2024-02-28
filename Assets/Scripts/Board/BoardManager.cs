@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Board;
 using DataModel;
 using TMPro;
 using UnityEngine;
@@ -30,7 +31,12 @@ public class BoardManager : MonoBehaviour
     private List<Transform> _numberButtons;
     private Transform[,] _tiles;
 
-    private Board _board;
+    private DataModel.Board _board;
+
+    [SerializeField]
+    private Timer _timer;
+
+    [SerializeField] private Victory _victory;
 
     private int _selectedNumber;
     // Start is called before the first frame update
@@ -114,6 +120,7 @@ public class BoardManager : MonoBehaviour
                 _numberButtons.Add(button.transform);
             }
 
+            _timer.Initialize();
             _thisImage.enabled = true;
             _isInitialized = true;
         }
@@ -229,5 +236,10 @@ public class BoardManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    public void AnimateVictory()
+    {
+        StartCoroutine(_victory.AnimateVictory());
     }
 }

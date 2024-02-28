@@ -110,7 +110,7 @@ namespace DataModel
             switch (difficulty)
             {
                 case GameManager.E_Difficulty.Easy:
-                    addBackCount = removed.Count / 2;
+                    addBackCount = removed.Count;
                     break;
                 case GameManager.E_Difficulty.Medium:
                     addBackCount = removed.Count / 4;
