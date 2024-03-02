@@ -20,6 +20,8 @@ public class BoardManager : MonoBehaviour
     private float _tileBorder = 5;
     private float _largeTileBorder = 10;
 
+    private bool _interactable;
+
     private UnityEngine.UI.Image _thisImage;
 
     private bool _isInitialized;
@@ -50,6 +52,7 @@ public class BoardManager : MonoBehaviour
         _thisImage.enabled = false;
         _loading = transform.Find("Loading").gameObject;
         _buttons = transform.Find("Buttons");
+        _interactable = true;
         // TODO: Error handling
     }
 
@@ -189,6 +192,10 @@ public class BoardManager : MonoBehaviour
 
     public void EditTile(int x,int y)
     {
+        if (!_interactable)
+        {
+            return;
+        }
         var tile = _tiles[x,y];
         var num = tile.transform.Find("Num");
         var selectedNumber = _selectedNumber;
@@ -240,6 +247,7 @@ public class BoardManager : MonoBehaviour
 
     public void AnimateVictory()
     {
+        _interactable = false;
         StartCoroutine(_victory.AnimateVictory(_timer.ElapsedTime));
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -10,6 +11,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public const int NUM_TIMES_TO_KEEP = 10;
+    public const int GAMES_BETWEEN_ADS = 3;
+    
     [SerializeField]
     private int _queueSize = 5;
     private Dictionary<E_Difficulty, Queue<DataModel.Board>> _boards;
@@ -26,33 +30,43 @@ public class GameManager : MonoBehaviour
     public E_Difficulty CurrentDifficulty;
     public Dictionary<E_Difficulty, Queue<DataModel.Board>> Boards => _boards;
 
+    public UserData UserData => _userData;
+
     // Start is called before the first frame update
     void Start()
     {
-        Instance = this;
-        DontDestroyOnLoad(this);
-        _boards = new Dictionary<E_Difficulty, Queue<DataModel.Board>>();
-        _locks = new Dictionary<E_Difficulty, object>();
+        if (Instance is null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+            _boards = new Dictionary<E_Difficulty, Queue<DataModel.Board>>();
+            _locks = new Dictionary<E_Difficulty, object>();
         
+            foreach(var difficulty in Enum.GetValues(typeof(E_Difficulty)))
+            {
+                _boards.Add((E_Difficulty)difficulty, new Queue<DataModel.Board>());
+                _locks.Add((E_Difficulty)difficulty, new object());
+            }
         
-        if (File.Exists(Application.persistentDataPath + "/save.dat"))
-        {
-            var bf = new BinaryFormatter();
-            var file = File.Open(Application.persistentDataPath + "/save.dat", FileMode.Open);
-            _userData = (UserData)bf.Deserialize(file);
-        }
-        foreach(var difficulty in Enum.GetValues(typeof(E_Difficulty)))
-        {
-            _boards.Add((E_Difficulty)difficulty, new Queue<DataModel.Board>());
-            _locks.Add((E_Difficulty)difficulty, new object());
-        }
+            if (File.Exists(Application.persistentDataPath + "/save.dat"))
+            {
+                var bf = new BinaryFormatter();
+                var file = File.Open(Application.persistentDataPath + "/save.dat", FileMode.Open);
+                _userData = (UserData)bf.Deserialize(file);
+                _boards = _userData.GetBoardQueues();
+            }
+            else
+            {
+                _userData = new UserData();
+            }
+            // _userData = new UserData();
 
-        if (!_userData.Equals(default))
-        {
-            _boards = _userData.GetBoardQueues();
+            _tasks = new Task[_boards.Keys.Count];
         }
-
-        _tasks = new Task[_boards.Keys.Count];
+        else
+        {
+            DestroyImmediate(gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -91,7 +105,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUserData()
     {
-        _userData = new UserData(_boards);
+        _userData.UpdateBoardData(_boards);
     }
     
     
@@ -117,8 +131,21 @@ public class GameManager : MonoBehaviour
         file.Close();
     }
 
-    public void GoToDifficultySelect(){
+    public static void GoToDifficultySelect(){
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+    public static void GoToStats(){
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+    }
+
+    public static void UpdateStats(float completionTime)
+    {
+        Instance.UpdateStatsHelper(completionTime);
+    }
+
+    private void UpdateStatsHelper(float completionTime)
+    {
+        _userData.UpdateStats(CurrentDifficulty,completionTime);
     }
 
     public enum E_Difficulty

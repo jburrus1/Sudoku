@@ -40,7 +40,7 @@ namespace Board
 
         public void ChangeDifficulty()
         {
-            GameManager.Instance.GoToDifficultySelect();
+            GameManager.GoToDifficultySelect();
         }
 
         public void ReturnToMenu()
@@ -58,6 +58,8 @@ namespace Board
             var ts = TimeSpan.FromSeconds(elapsedTime);
             _timer.Hide();
             _timeText.text = $"Total time -- {ts.TotalMinutes:00}:{ts.Seconds:00}";
+            
+            GameManager.UpdateStats(elapsedTime);
             
             
             float timeElapsed = 0;

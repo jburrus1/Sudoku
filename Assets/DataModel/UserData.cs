@@ -1,18 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace DataModel
 {
     [Serializable]
-    public struct UserData
+    public class UserData: IDeserializationCallback
     {
-        public Dictionary<GameManager.E_Difficulty, BoardData[]> _boardData;
+        private Dictionary<GameManager.E_Difficulty, BoardData[]> _boardData;
 
-        public UserData(Dictionary<GameManager.E_Difficulty, Queue<Board>> boardData)
+
+        private Dictionary<GameManager.E_Difficulty, Stats> _statsByDifficulty;
+        private int _adCounter;
+        
+        public bool IsInitialized => (_boardData is null);
+
+        public Dictionary<GameManager.E_Difficulty, Stats> StatsByDifficulty => _statsByDifficulty;
+
+        public UserData()
+        {
+            _boardData = new Dictionary<GameManager.E_Difficulty, BoardData[]>();
+            _statsByDifficulty = new Dictionary<GameManager.E_Difficulty, Stats>();
+        
+            foreach(var difficulty in Enum.GetValues(typeof(GameManager.E_Difficulty)))
+            {
+                _statsByDifficulty.Add((GameManager.E_Difficulty)difficulty, new Stats((GameManager.E_Difficulty)difficulty));
+            }
+        }
+
+        public void UpdateBoardData(Dictionary<GameManager.E_Difficulty, Queue<Board>> boardData)
         {
             _boardData = ConvertToBoardDataQueues(boardData);
         }
 
+        public bool IncrementAdCounterAndServe()
+        {
+            _adCounter++;
+            if (_adCounter >= GameManager.GAMES_BETWEEN_ADS)
+            {
+                _adCounter = 0;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void UpdateStats(GameManager.E_Difficulty difficulty, float time)
+        {
+            _statsByDifficulty[difficulty].AddNewTime(time);
+        }
+        
         public Dictionary<GameManager.E_Difficulty, Queue<Board>> GetBoardQueues()
         {
             var outData = new Dictionary<GameManager.E_Difficulty, Queue<Board>>();
@@ -50,6 +87,29 @@ namespace DataModel
             }
 
             return outData;
+        }
+
+        public void OnDeserialization(object sender)
+        {
+            if (_statsByDifficulty is null)
+            {
+                _statsByDifficulty = new Dictionary<GameManager.E_Difficulty, Stats>();
+        
+                foreach(var difficulty in Enum.GetValues(typeof(GameManager.E_Difficulty)))
+                {
+                    _statsByDifficulty.Add((GameManager.E_Difficulty)difficulty, new Stats((GameManager.E_Difficulty)difficulty));
+                }
+            }
+
+            if ((_boardData is null) || (_boardData.Count == 0))
+            {
+                _boardData = new Dictionary<GameManager.E_Difficulty, BoardData[]>();
+        
+                foreach(var difficulty in Enum.GetValues(typeof(GameManager.E_Difficulty)))
+                {
+                    _boardData.Add((GameManager.E_Difficulty)difficulty, new BoardData[]{});
+                }
+            }
         }
     }
 }
