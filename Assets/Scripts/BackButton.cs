@@ -15,12 +15,21 @@ public class BackButton : MonoBehaviour
         _popup.SetActive(false);
     }
 
+    public void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            GoBack();
+        }
+    }
+
     public void GoBack()
     {
         switch (SceneManager.GetActiveScene().buildIndex)
         {
             case 1:
             case 3:
+            case 4:
                 SceneManager.LoadScene(0);
                 break;
             case 2:

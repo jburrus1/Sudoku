@@ -1,6 +1,7 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.UI;
 
 namespace Board
@@ -12,6 +13,7 @@ namespace Board
         private TextMeshProUGUI _text;
 
         private bool _initialized;
+        private bool _adDone;
 
         public float ElapsedTime => _elapsedTime;
 
@@ -31,7 +33,7 @@ namespace Board
 
         private void Update()
         {
-            if (_initialized)
+            if (_initialized &&  _adDone)
             {
                 _elapsedTime += Time.deltaTime;
                 UpdateText();
@@ -47,6 +49,11 @@ namespace Board
         {
             var ts = TimeSpan.FromSeconds(_elapsedTime);
             _text.text = $"{ts.TotalMinutes:00}:{ts.Seconds:00}";
+        }
+
+        public void AdDone()
+        {
+            _adDone = true;
         }
     }
 }

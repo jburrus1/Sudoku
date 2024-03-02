@@ -202,6 +202,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1267420824}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToOptions
+      objectReference: {fileID: 0}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7055046326009816823, guid: cc9c94dec87d7f54d82380591bd81028,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7420458895073410046, guid: cc9c94dec87d7f54d82380591bd81028,
         type: 3}
       propertyPath: m_Pivot.x

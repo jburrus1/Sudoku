@@ -1811,9 +1811,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c00ef6c9a6c12b41be424ef202479fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myAdUnitId: 
+  bannerID: 
+  interstitialID: 
   adStarted: 0
   adLoading: 0
+  _timer: {fileID: 728841463}
 --- !u!1 &2105873875
 GameObject:
   m_ObjectHideFlags: 0

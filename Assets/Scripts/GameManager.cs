@@ -137,6 +137,9 @@ public class GameManager : MonoBehaviour
     public static void GoToStats(){
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
+    public static void GoToOptions(){
+        UnityEngine.SceneManagement.SceneManager.LoadScene(4);
+    }
 
     public static void UpdateStats(float completionTime)
     {
