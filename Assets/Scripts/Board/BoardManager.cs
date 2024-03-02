@@ -240,6 +240,6 @@ public class BoardManager : MonoBehaviour
 
     public void AnimateVictory()
     {
-        StartCoroutine(_victory.AnimateVictory());
+        StartCoroutine(_victory.AnimateVictory(_timer.ElapsedTime));
     }
 }

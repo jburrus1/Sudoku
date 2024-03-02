@@ -13,6 +13,8 @@ namespace Board
 
         private bool _initialized;
 
+        public float ElapsedTime => _elapsedTime;
+
         private void Awake()
         {
             _initialized = false;
@@ -34,6 +36,11 @@ namespace Board
                 _elapsedTime += Time.deltaTime;
                 UpdateText();
             }
+        }
+
+        public void Hide()
+        {
+            _text.enabled = false;
         }
 
         private void UpdateText()

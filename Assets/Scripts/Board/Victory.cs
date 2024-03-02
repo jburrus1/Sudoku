@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,12 +17,19 @@ namespace Board
         private Image _image;
         private GameObject _visual;
 
+        [SerializeField]
+        private Timer _timer;
+
+        private TextMeshProUGUI _timeText;
+
         private void Awake()
         {
             _image = GetComponent<Image>();
             _visual = transform.Find("VictoryVisual").gameObject;
 
-            _image.enabled = false;
+            _timeText = _visual.transform.Find("Time").GetComponent<TextMeshProUGUI>();
+
+                     _image.enabled = false;
             _visual.SetActive(false);
         }
 
@@ -42,10 +50,14 @@ namespace Board
         
         
 
-        public IEnumerator AnimateVictory()
+        public IEnumerator AnimateVictory(float elapsedTime)
         {
             var start = _boardTransform.anchoredPosition;
             var final = new Vector2(0, 584);
+            
+            var ts = TimeSpan.FromSeconds(elapsedTime);
+            _timer.Hide();
+            _timeText.text = $"Total time -- {ts.TotalMinutes:00}:{ts.Seconds:00}";
             
             
             float timeElapsed = 0;

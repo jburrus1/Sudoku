@@ -15,15 +15,11 @@ namespace DataModel
         public Board(GameManager.E_Difficulty difficulty)
         {
             _grid = GenerateGrid(difficulty);
-
-            // _grid = new int[_size, _size];
-            // for (var x = 0; x < _size; x++)
-            // {
-            //     for (var y = 0; y < _size; y++)
-            //     {
-            //         _grid[x, y] = 1;
-            //     }
-            // }
+        }
+        
+        public Board(BoardData boardData)
+        {
+            _grid = boardData.Grid;
         }
 
         private static void Shuffle<T>(IList<T> list)
@@ -214,5 +210,18 @@ namespace DataModel
             return false;
         }
 
+    }
+
+    [Serializable]
+    public struct BoardData
+    {
+        private readonly int[,] _grid;
+
+        public readonly int[,] Grid => _grid;
+
+        public BoardData(Board board)
+        {
+            _grid = board.Grid;
+        }
     }
 }
